@@ -1,17 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 async function requestNew<T>(options: Record<string, unknown>): Promise<T> {
-    const accessToken = JSON.parse(localStorage.getItem('token') ?? 'null') as string;
-
-    const headers = accessToken
-        ? {
-            Authorization: `Bearer ${accessToken}`
-        }
-        : undefined;
-
     const client = axios.create({
-        baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
-        headers
+        baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`
     });
 
     // request handler

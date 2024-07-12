@@ -6,14 +6,18 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { store } from './store'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Notify from '../lib/notify'
 import { ClipLoader } from 'react-spinners'
+import StockContext from '../Context/StockContext';
+import ThemeContext from '../Context/ThemeContext';
 
 export function Providers({ children }: React.PropsWithChildren) {
+  const [darkMode, setDarkMode] = useState(false)
+  const [stockSymbol, setStockSymbol] = useState('FB')
   const onError = (error: unknown): unknown => {
     let title: string
     if (!error) {
@@ -66,7 +70,11 @@ export function Providers({ children }: React.PropsWithChildren) {
             </div>
           }
         >
-          {children}
+          <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+            <StockContext.Provider value={{ stockSymbol, setStockSymbol }}>
+              {children}
+            </StockContext.Provider>
+          </ThemeContext.Provider>
         </Suspense>
         <ToastContainer position="top-right" />
       </Provider>

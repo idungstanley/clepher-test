@@ -1,7 +1,8 @@
 import React from "react";
 import Card from "./Card";
+import { OverviewProps } from "../types/index.interface";
 
-const Overview = ({ symbol, price, change, changePercent, currency }) => {
+const Overview = ({ symbol, price, change, changePercent, currency }: OverviewProps) => {
   return (
     <Card>
       <span className="absolute text-lg left-4 top-4 text-neutral-400 xl:text-xl 2xl:text-2xl">

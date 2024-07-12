@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import ThemeContext from "../context/ThemeContext";
+import ThemeContext from "../Context/ThemeContext";
 import { IoMoonSharp } from "react-icons/io5";
 
 const ThemeIcon = () => {

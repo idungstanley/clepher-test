@@ -1,17 +1,18 @@
 'use client'
 import React, { useContext, useState } from 'react'
-import ThemeContext from '../context/ThemeContext'
-import { searchSymbol } from '../utils/api/stock-api'
+import ThemeContext from '../Context/ThemeContext'
 import SearchResults from './SearchResults'
 import { FaSearch } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
+import { searchSymbol } from '../features/stock/stockService'
+import { BestMatches } from '../types/index.interface';
 
 const Search = () => {
   const { darkMode } = useContext(ThemeContext)
 
   const [searchInput, setSearchInput] = useState('')
 
-  const [bestMatches, setBestMatches] = useState([])
+  const [bestMatches, setBestMatches] = useState<BestMatches[]>([])
 
   const clear = () => {
     setSearchInput('')
@@ -22,7 +23,7 @@ const Search = () => {
     try {
       if (searchInput) {
         const searchResults = await searchSymbol(searchInput)
-        const result = searchResults.result
+        const result = searchResults.bestMatches
         setBestMatches(result)
       }
     } catch (error) {
@@ -53,16 +54,16 @@ const Search = () => {
       />
       {searchInput && (
         <button onClick={clear} className="m-1">
-          <IoClose className="h-4 w-4 fill-gray-500" />
+          <IoClose className="w-4 h-4 fill-gray-500" />
         </button>
       )}
       <button
         onClick={updateBestMatches}
-        className="h-8 w-8 bg-indigo-600 rounded-md flex justify-center items-center m-1 p-2 transition duration-300 hover:ring-2 ring-indigo-400"
+        className="flex items-center justify-center w-8 h-8 p-2 m-1 transition duration-300 bg-indigo-600 rounded-md hover:ring-2 ring-indigo-400"
       >
-        <FaSearch className="h-4 w-4 fill-gray-100" />
+        <FaSearch className="w-4 h-4 fill-gray-100" />
       </button>
-      {searchInput && bestMatches.length > 0 ? (
+      {searchInput && bestMatches?.length > 0 ? (
         <SearchResults results={bestMatches} />
       ) : null}
     </div>
