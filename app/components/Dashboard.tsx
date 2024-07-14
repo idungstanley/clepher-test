@@ -19,16 +19,15 @@ const Dashboard = () => {
   const { quoteResult } = useAppSelector((state) => state.stock)
 
   //Local state
-  const [stockDetails, setStockDetails] = useState<any>({})
+  const [stockDetails, setStockDetails] = useState<DetailsProps | null>(null)
 
   useEffect(() => {
     const updateStockDetails = async () => {
       try {
         const result = await fetchStockDetails(stockSymbol)
-        console.log("result: ", result)
         setStockDetails(result)
       } catch (error) {
-        setStockDetails({})
+        setStockDetails(null)
         console.log(error)
       }
     }
@@ -53,7 +52,7 @@ const Dashboard = () => {
       }`}
     >
       <div className="flex items-center justify-start col-span-1 row-span-1 md:col-span-2 xl:col-span-3">
-        <Header name={stockDetails.name} />
+        <Header name={stockDetails?.Name as string} />
       </div>
       <div className="row-span-4 md:col-span-2">
         <Chart />
@@ -64,7 +63,7 @@ const Dashboard = () => {
           price={quoteResult?.price}
           change={quoteResult?.change}
           changePercent={quoteResult?.cp}
-          currency={stockDetails.currency}
+          currency={stockDetails?.Currency as string}
         />
       </div>
       <div className="row-span-2 xl:row-span-3">
