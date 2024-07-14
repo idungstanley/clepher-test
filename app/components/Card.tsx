@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext } from 'react'
-import ThemeContext from '../context/ThemeContext';
+import ThemeContext from '../Context/ThemeContext';
 
 const Card = ({ children }: { children: ReactNode }) => {
   const { darkMode } = useContext(ThemeContext)
