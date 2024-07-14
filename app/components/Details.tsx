@@ -14,7 +14,6 @@ export interface DetailsProps {
 
 const Details = ({ details }: { details: DetailsProps }) => {
   const { darkMode } = useContext(ThemeContext)
-  console.log('de: ', details)
   const detailsList: { [K in keyof DetailsProps]: string } = {
     Name: 'Name',
     Country: 'Country',
