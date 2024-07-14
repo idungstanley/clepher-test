@@ -1,8 +1,5 @@
-import { SearchReq } from "@/app/types/index.interface";
+import { QuoteReq, SearchReq, WeeklyStockData } from "@/app/types/index.interface";
 import requestNew from "@/app/utils/requestNew";
-import { useQuery } from "@tanstack/react-query";
-
-const basePath = "https://finnhub.io/api/v1";
 
 export const searchSymbol = async (query: string) => {
     const data = await requestNew<SearchReq>({
@@ -11,43 +8,24 @@ export const searchSymbol = async (query: string) => {
     return data;
 };
 
-export const fetchStockDetails = async (stockSymbol) => {
-    const url = `${basePath}/stock/profile2?symbol=${stockSymbol}&token=${process.env.REACT_APP_API_KEY}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-
-    return await response.json();
+export const fetchStockDetails = async (stockSymbol: string) => {
+    const data = await requestNew<SearchReq>({
+        url: `/query?function=OVERVIEW&symbol=${stockSymbol}&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+    });
+    return data;
 };
 
-export const fetchQuote = async (stockSymbol) => {
-    const url = `${basePath}/quote?symbol=${stockSymbol}&token=${process.env.REACT_APP_API_KEY}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-
-    return await response.json();
+export const fetchQuote = async (stockSymbol: string) => {
+    const data = await requestNew<QuoteReq>({
+        url: `/query?function=GLOBAL_QUOTE&symbol=${stockSymbol}&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+    });
+    return data;
 };
 
-export const fetchHistoricalData = async (
-    stockSymbol,
-    resolution,
-    from,
-    to
-) => {
-    const url = `${basePath}/stock/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}&token=${process.env.REACT_APP_API_KEY}`;
-    const response = await fetch(url);
+export const fetchWeeklyAdjustedData = async (stockSymbol: string) => {
+    const data = await requestNew<WeeklyStockData>({
+        url: `/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${stockSymbol}&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+    });
+    return data;
 
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-
-    return await response.json();
 };

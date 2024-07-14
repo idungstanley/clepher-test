@@ -5,18 +5,20 @@ import SearchResults from './SearchResults'
 import { FaSearch } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
 import { searchSymbol } from '../features/stock/stockService'
-import { BestMatches } from '../types/index.interface';
+import { BestMatches } from '../types/index.interface'
+import { useAppDispatch, useAppSelector } from '../redux/store'
+import { setSearchResult } from '../features/stock/stockSlice'
 
 const Search = () => {
+  const dispatch = useAppDispatch()
   const { darkMode } = useContext(ThemeContext)
+  const { searchResult } = useAppSelector((state) => state.stock)
 
   const [searchInput, setSearchInput] = useState('')
 
-  const [bestMatches, setBestMatches] = useState<BestMatches[]>([])
-
   const clear = () => {
     setSearchInput('')
-    setBestMatches([])
+    dispatch(setSearchResult([]))
   }
 
   const updateBestMatches = async () => {
@@ -24,10 +26,10 @@ const Search = () => {
       if (searchInput) {
         const searchResults = await searchSymbol(searchInput)
         const result = searchResults.bestMatches
-        setBestMatches(result)
+        dispatch(setSearchResult(result))
       }
     } catch (error) {
-      setBestMatches([])
+      dispatch(setSearchResult([]))
       console.log(error)
     }
   }
@@ -63,8 +65,8 @@ const Search = () => {
       >
         <FaSearch className="w-4 h-4 fill-gray-100" />
       </button>
-      {searchInput && bestMatches?.length > 0 ? (
-        <SearchResults results={bestMatches} />
+      {searchInput && searchResult.length > 0 ? (
+        <SearchResults />
       ) : null}
     </div>
   )

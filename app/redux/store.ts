@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import stockSlice from '../features/stock/stockSlice';
 
 export const store = configureStore({
     reducer: {
+        stock: stockSlice
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -1,27 +1,31 @@
 'use client'
 import React, { useState, useEffect, useContext } from 'react'
 import Header from './Header'
-import Details from './Details'
+import Details, { DetailsProps } from './Details'
 import Overview from './Overview'
 import Chart from './Chart'
 import StockContext from '../Context/StockContext'
-// import { fetchStockDetails, fetchQuote } from '../utils/api/stock-api'
 import ThemeContext from '../Context/ThemeContext'
+import { fetchQuote, fetchStockDetails } from '../features/stock/stockService'
+import { useAppDispatch, useAppSelector } from '../redux/store'
+import { setQuoteResult } from '../features/stock/stockSlice'
 
 const Dashboard = () => {
   //Context state
   const { darkMode } = useContext(ThemeContext)
   const { stockSymbol } = useContext(StockContext)
 
+  const dispatch = useAppDispatch()
+  const { quoteResult } = useAppSelector((state) => state.stock)
+
   //Local state
-  const [stockDetails, setStockDetails] = useState<any>({ })
-  const [quote, setQuote] = useState<any>({ pc: '', d: '', dp: '', currency: '' })
+  const [stockDetails, setStockDetails] = useState<any>({})
 
   useEffect(() => {
     const updateStockDetails = async () => {
       try {
-        // const result = await fetchStockDetails(stockSymbol)
-        let result = { name: '' }
+        const result = await fetchStockDetails(stockSymbol)
+        console.log("result: ", result)
         setStockDetails(result)
       } catch (error) {
         setStockDetails({})
@@ -31,18 +35,17 @@ const Dashboard = () => {
 
     const updateStockOverview = async () => {
       try {
-        // const result = await fetchQuote(stockSymbol)
-        let result = {}
-        setQuote(result)
+        const result = await fetchQuote(stockSymbol)
+        dispatch(setQuoteResult(result['Global Quote']))
       } catch (error) {
-        setQuote({})
+        dispatch(setQuoteResult(null))
         console.log(error)
       }
     }
-
     updateStockDetails()
     updateStockOverview()
   }, [stockSymbol])
+
   return (
     <div
       className={`h-screen grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-rows-8 md:grid-rows-7 xl:grid-rows-5 auto-rows-fr gap-6 p-10 font-quicksand ${
@@ -53,19 +56,19 @@ const Dashboard = () => {
         <Header name={stockDetails.name} />
       </div>
       <div className="row-span-4 md:col-span-2">
-        {/* <Chart /> */}
+        <Chart />
       </div>
       <div>
         <Overview
           symbol={stockSymbol}
-          price={quote.pc}
-          change={quote.d}
-          changePercent={quote.dp}
+          price={quoteResult?.price}
+          change={quoteResult?.change}
+          changePercent={quoteResult?.cp}
           currency={stockDetails.currency}
         />
       </div>
       <div className="row-span-2 xl:row-span-3">
-        <Details details={stockDetails} />
+        <Details details={stockDetails as DetailsProps} />
       </div>
     </div>
   )

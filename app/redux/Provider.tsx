@@ -17,7 +17,7 @@ import ThemeContext from '../Context/ThemeContext';
 
 export function Providers({ children }: React.PropsWithChildren) {
   const [darkMode, setDarkMode] = useState(false)
-  const [stockSymbol, setStockSymbol] = useState('FB')
+  const [stockSymbol, setStockSymbol] = useState('IBM')
   const onError = (error: unknown): unknown => {
     let title: string
     if (!error) {
